@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07040a">
+  <meta name="color-scheme" content="dark">
+  <title>Para ti</title>
+  <script>document.documentElement.classList.add('js');</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ░░ FONDO EN CAPAS: luz ambiental, cielo de corazones, grano y viñeta ░░ -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-base"></div>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+    <canvas id="sky"></canvas>
+    <div class="bg-grain"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <!-- Destello que cubre la pantalla durante la transición entre escenas -->
+  <div id="bloom" aria-hidden="true"></div>
+
+  <!-- Control de música (aparece al pulsar «Siguiente») -->
+  <button id="music" class="music" type="button" data-anim hidden
+          aria-label="Pausar la música" aria-pressed="true">
+    <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Reproductor de YouTube (solo audio; fuera de pantalla pero con tamaño válido) -->
+  <div class="yt-holder" aria-hidden="true"><div id="yt-player"></div></div>
+
+  <main class="stage">
+
+    <!-- ═════════ ESCENA 1 · INICIO ═════════ -->
+    <section id="scene-intro" class="scene scene-intro is-active" aria-label="Inicio">
+      <div class="intro">
+        <div class="intro-orb" data-anim></div>
+        <h1 id="intro-title" class="intro-title"></h1>
+        <p class="intro-hint" data-anim>Mejor con sonido</p>
+        <div class="btn-wrap" data-anim>
+          <button id="btn-next" class="btn btn-primary" type="button" data-burst disabled>
+            <span>Siguiente</span>
+            <svg class="arrow" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════ ESCENA 2 · FOTOGRAFÍA + CARTA ═════════ -->
+    <section id="scene-story" class="scene scene-story" aria-label="Carta" aria-hidden="true">
+      <div class="story">
+
+        <div class="photo-wrap" id="photo-wrap" data-anim>
+          <div class="photo-par" id="photo-par">
+            <div class="photo-glow" id="photo-glow" data-anim></div>
+
+            <!-- ▼▼▼ AQUÍ VA TU FOTOGRAFÍA ▼▼▼
+                 Guarda tu imagen en esta misma carpeta con el nombre  foto.jpg
+                 (o cambia el nombre en script.js → CONFIG.photo).
+                 Se muestra con sus proporciones originales, sin recortes. -->
+            <figure class="photo-frame" id="photo-frame" data-burst>
+              <img id="photo" alt="Nuestra fotografía" decoding="async" hidden>
+              <div class="photo-placeholder" id="photo-placeholder" hidden>
+                <div>
+                  <span class="ph-title">Aquí va tu fotografía</span>
+                  <span class="ph-sub">Guárdala en esta carpeta como <strong>foto.jpg</strong></span>
+                </div>
+              </div>
+            </figure>
+            <!-- ▲▲▲ FIN DEL ESPACIO DE LA FOTOGRAFÍA ▲▲▲ -->
+          </div>
+        </div>
+
+        <article class="panel" id="panel" data-anim>
+          <header class="panel-head">
+            <span class="eyebrow">Para ti</span>
+            <span class="rule"></span>
+            <svg class="mini-heart" viewBox="0 0 32 29" aria-hidden="true"><path d="M16 28C6 20 1 14 1 8.5C1 4.5 4.2 1.5 8 1.5C11.3 1.5 14.2 3.4 16 6.5C17.8 3.4 20.7 1.5 24 1.5C27.8 1.5 31 4.5 31 8.5C31 14 26 20 16 28Z" fill="currentColor"/></svg>
+          </header>
+
+          <div class="letter" id="letter" tabindex="0" aria-label="Carta"></div>
+
+          <footer class="panel-actions">
+            <button id="btn-back" class="btn btn-ghost" type="button">
+              <svg class="arrow arrow-left" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Volver</span>
+            </button>
+            <button id="btn-skip" class="btn btn-ghost" type="button" data-mode="skip">Mostrar todo</button>
+          </footer>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <noscript>
+    <p style="position:fixed;inset:0;display:grid;place-items:center;margin:0;padding:24px;text-align:center;background:#07040a;color:#fff4ec;font-family:Georgia,serif;z-index:99">
+      Esta página necesita JavaScript para mostrarte la sorpresa.
+    </p>
+  </noscript>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
